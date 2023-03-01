@@ -1,0 +1,31 @@
+{
+  "name": "uniapp-promisify",
+  "version": "0.1.0",
+  "license": "AGPL-3.0",
+  "description": "Uni App API Promisify",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "uniapp",
+    "promisify",
+    "uni-app",
+    "promise"
+  ],
+  "author": {
+    "name": "Maiko Tan",
+    "email": "maiko.tan.coding@gmail.com",
+    "url": "https://github.com/MaikoTan"
+  },
+  "packageManager": "yarn@3.4.1",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}
