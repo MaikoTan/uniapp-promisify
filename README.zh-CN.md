@@ -1,6 +1,6 @@
 # uniapp-promisify
 
-[English](./README.md) | 简体中文
+[English](https://github.com/MaikoTan/uniapp-promisify/blob/master/README.md) | 简体中文
 
 ## 初衷
 

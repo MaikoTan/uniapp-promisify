@@ -1,6 +1,6 @@
 # uniapp-promisify
 
-English | [简体中文](./README.zh-CN.md)
+English | [简体中文](https://github.com/MaikoTan/uniapp-promisify/blob/master/README.zh-CN.md)
 
 ## Motivation
 
