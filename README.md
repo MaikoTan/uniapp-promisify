@@ -1,5 +1,7 @@
 # uniapp-promisify
 
+[![Build](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml/badge.svg)](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml)
+
 English | [简体中文](https://github.com/MaikoTan/uniapp-promisify/blob/master/README.zh-CN.md)
 
 ## Motivation
