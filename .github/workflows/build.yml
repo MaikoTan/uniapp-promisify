@@ -1,11 +1,11 @@
-name: Publish
+name: Build
 
 on:
   push:
   pull_request:
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
 
     strategy:
