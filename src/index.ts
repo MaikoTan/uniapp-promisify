@@ -13,3 +13,5 @@ export function promisify<Option extends { success?: (...args: any[]) => any; fa
     })
   }
 }
+
+export default promisify
