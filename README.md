@@ -4,12 +4,12 @@
 
 <p align="center">
 
-![NPM Version](https://img.shields.io/npm/v/uniapp-promisify?style=flat)
-![NPM Downloads](https://img.shields.io/npm/dw/uniapp-promisify)
+[![NPM Version](https://img.shields.io/npm/v/uniapp-promisify?style=flat)](https://www.npmjs.com/package/uniapp-promisify)
+[![NPM Downloads](https://img.shields.io/npm/dw/uniapp-promisify)](https://www.npmjs.com/package/uniapp-promisify)
 [![Build](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml/badge.svg)](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml)
-![GitHub issues](https://img.shields.io/github/issues/MaikoTan/uniapp-promisify)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/MaikoTan/uniapp-promisify)
-![GitHub License](https://img.shields.io/github/license/MaikoTan/uniapp-promisify?color=green)
+[![GitHub issues](https://img.shields.io/github/issues/MaikoTan/uniapp-promisify)](https://github.com/MaikoTan/uniapp-promisify/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/MaikoTan/uniapp-promisify)](https://github.com/MaikoTan/uniapp-promisify/pulls)
+[![GitHub License](https://img.shields.io/github/license/MaikoTan/uniapp-promisify?color=green)](https://github.com/MaikoTan/uniapp-promisify/blob/master/LICENSE)
 
 </p>
 
