@@ -34,9 +34,33 @@ yarn add uniapp-promisify
 ```ts
 import { promisify } from 'uniapp-promisify'
 
+// Promisify 单个函数
 const login = promisify(uni.login)
 const res = await login()
-//     ^? UniNamespace.LoginRes: 
+//     ^? UniNamespace.LoginRes
+
+// 或者 Promisify `uni` 全局对象
+const pUni = promisify(uni)
+const res = await pUni.login()
+//     ^? UniNamespace.LoginRes
+```
+
+理想的使用方式是，建立一个文件，导出被 Promisify 过的 `uni` 对象：
+
+```ts
+// utils.ts
+import { promisify } from 'uniapp-promisify'
+
+export {
+  uni: promisify(uni)
+}
+
+// App.vue
+import { uni } from './utils.ts'
+
+onLoad(async () => {
+  await uni.login()
+})
 ```
 
 ## 许可证
