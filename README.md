@@ -34,9 +34,33 @@ yarn add uniapp-promisify
 ```ts
 import { promisify } from 'uniapp-promisify'
 
+// Promisify a single function
 const login = promisify(uni.login)
 const res = await login()
-//     ^? UniNamespace.LoginRes: 
+//     ^? UniNamespace.LoginRes
+
+// Or you could promisify the whole `uni` global object
+const pUni = promisify(uni)
+const res = await pUni.login()
+//     ^? UniNamespace.LoginRes
+```
+
+The ideal way to use this package is create a file exports the promisified `uni` object:
+
+```ts
+// utils.ts
+import { promisify } from 'uniapp-promisify'
+
+export {
+  uni: promisify(uni)
+}
+
+// App.vue
+import { uni } from './utils.ts'
+
+onLoad(async () => {
+  await uni.login()
+})
 ```
 
 ## License
