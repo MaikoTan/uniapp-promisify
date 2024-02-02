@@ -1,6 +1,17 @@
-# uniapp-promisify
+<p align="center">
+  <h1 align="center">uniapp-promisify</h1>
+</p>
 
+<p align="center">
+
+![NPM Version](https://img.shields.io/npm/v/uniapp-promisify?style=flat)
+![NPM Downloads](https://img.shields.io/npm/dw/uniapp-promisify)
 [![Build](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml/badge.svg)](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml)
+![GitHub issues](https://img.shields.io/github/issues/MaikoTan/uniapp-promisify)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/MaikoTan/uniapp-promisify)
+![GitHub License](https://img.shields.io/github/license/MaikoTan/uniapp-promisify?color=green)
+
+</p>
 
 [English](https://github.com/MaikoTan/uniapp-promisify/blob/master/README.md) | 简体中文
 
