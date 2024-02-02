@@ -1,6 +1,17 @@
-# uniapp-promisify
+<p align="center">
+  <h1 align="center">uniapp-promisify</h1>
+</p>
 
+<p align="center">
+
+![NPM Version](https://img.shields.io/npm/v/uniapp-promisify?style=flat)
+![NPM Downloads](https://img.shields.io/npm/dw/uniapp-promisify)
 [![Build](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml/badge.svg)](https://github.com/MaikoTan/uniapp-promisify/actions/workflows/build.yml)
+![GitHub issues](https://img.shields.io/github/issues/MaikoTan/uniapp-promisify)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/MaikoTan/uniapp-promisify)
+![GitHub License](https://img.shields.io/github/license/MaikoTan/uniapp-promisify?color=green)
+
+</p>
 
 [English](https://github.com/MaikoTan/uniapp-promisify/blob/master/README.md) | 简体中文
 
@@ -23,9 +34,33 @@ yarn add uniapp-promisify
 ```ts
 import { promisify } from 'uniapp-promisify'
 
+// Promisify 单个函数
 const login = promisify(uni.login)
 const res = await login()
-//     ^? UniNamespace.LoginRes: 
+//     ^? UniNamespace.LoginRes
+
+// 或者 Promisify `uni` 全局对象
+const pUni = promisify(uni)
+const res = await pUni.login()
+//     ^? UniNamespace.LoginRes
+```
+
+理想的使用方式是，建立一个文件，导出被 Promisify 过的 `uni` 对象：
+
+```ts
+// utils.ts
+import { promisify } from 'uniapp-promisify'
+
+export {
+  uni: promisify(uni)
+}
+
+// App.vue
+import { uni } from './utils.ts'
+
+onLoad(async () => {
+  await uni.login()
+})
 ```
 
 ## 许可证
