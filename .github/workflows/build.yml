@@ -25,3 +25,10 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name: Test
+        working-directory: ./test
+        run: |
+          touch yarn.lock
+          yarn
+          yarn test
