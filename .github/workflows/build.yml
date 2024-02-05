@@ -29,6 +29,6 @@ jobs:
       - name: Test
         working-directory: ./test
         run: |
-          yarn
           touch yarn.lock
+          yarn
           yarn test
