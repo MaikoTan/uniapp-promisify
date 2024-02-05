@@ -30,4 +30,5 @@ jobs:
         working-directory: ./test
         run: |
           yarn
+          touch yarn.lock
           yarn test
