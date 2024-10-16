@@ -1,6 +1,6 @@
 {
   "name": "uniapp-promisify",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "AGPL-3.0",
   "description": "Uni App API Promisify",
   "scripts": {
@@ -38,6 +38,6 @@
   "packageManager": "yarn@4.1.0",
   "devDependencies": {
     "tsup": "^6.6.3",
-    "typescript": "^4.9.5"
+    "typescript": "~5.0.1"
   }
 }
