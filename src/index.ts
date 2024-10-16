@@ -17,7 +17,16 @@ export function promisify<Option extends { success?: (...args: any[]) => any; fa
 ): PromisifyFunction<Option>
 export function promisify<Module extends Record<string, any>>(module: Module): PromisifyModule<Module>
 export function promisify(fn: any) {
-  if (typeof fn !== 'function') {
+  if (typeof fn === 'object') {
+    return new Proxy(fn, {
+      get(target, prop) {
+        if (typeof target[prop] !== 'function') {
+          return target[prop]
+        }
+        return promisify(target[prop])
+      },
+    })
+  } else if (typeof fn === 'function') {
     return (options: any) => {
       return new Promise<any>((resolve, reject) => {
         fn({
@@ -27,15 +36,6 @@ export function promisify(fn: any) {
         })
       })
     }
-  } else if (typeof fn === 'object') {
-    return new Proxy(fn, {
-      get(target, prop) {
-        if (typeof target[prop] !== 'function') {
-          return target[prop]
-        }
-        return promisify(target[prop])
-      },
-    })
   }
 }
 
