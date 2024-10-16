@@ -35,7 +35,7 @@
     "email": "maiko.tan.coding@gmail.com",
     "url": "https://github.com/MaikoTan"
   },
-  "packageManager": "yarn@4.1.0",
+  "packageManager": "yarn@4.5.0",
   "devDependencies": {
     "tsup": "^6.6.3",
     "typescript": "~5.0.1"
