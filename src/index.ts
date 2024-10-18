@@ -41,7 +41,7 @@ export function promisify(fn: any) {
   }
 }
 
-const pUni = promisify(uni)
+const pUni = promisify(uni) as PromisifyModule<typeof uni>
 
 export {
   pUni as uni,
