@@ -10,7 +10,7 @@ type PromisifyModule<Module extends Record<string, any>> = {
       ? PromisifyFunction<Parameters<Module[K]>[0]>
       : Module[K]
     : Module[K]
-}
+} & { sync: Module }
 
 export function promisify<Option extends { success?: (...args: any[]) => any; fail?: (...args: any[]) => any }>(
   fn: (options: Option) => void,
@@ -20,7 +20,9 @@ export function promisify(fn: any) {
   if (typeof fn === 'object') {
     return new Proxy(fn, {
       get(target, prop) {
-        if (typeof target[prop] !== 'function') {
+        if (prop === 'sync') {
+          return target
+        } else if (typeof target[prop] !== 'function') {
           return target[prop]
         }
         return promisify(target[prop])
