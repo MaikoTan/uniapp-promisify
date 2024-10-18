@@ -35,6 +35,9 @@
     "email": "maiko.tan.coding@gmail.com",
     "url": "https://github.com/MaikoTan"
   },
+  "publishConfig": {
+    "provenance": true
+  },
   "packageManager": "yarn@4.5.0",
   "devDependencies": {
     "tsup": "^6.6.3",
