@@ -17,9 +17,11 @@ English | [简体中文](https://github.com/MaikoTan/uniapp-promisify/blob/maste
 
 ## Motivation
 
-The official API of UniApp is using the old school callback style, although the `Promise` way is supported in the latest version of UniApp, the creepy official API types are not updated yet. The most goddamn thing is that the official "Promisify" method [behaves differently in Vue 2 and Vue 3](https://uniapp.dcloud.net.cn/api/#vue-2-%E5%92%8C-vue-3-%E7%9A%84-api-promise-%E5%8C%96), which is really annoying.
+The official API of UniApp is using the Stone Age callback style, although `Promise` is already supported by several APIs in the latest version of UniApp, the creepy official API types are synchronized as well. And the most goddamn thing is that the official "Promisify" method even [behaves differently in Vue 2 and Vue 3](https://uniapp.dcloud.net.cn/api/#vue-2-%E5%92%8C-vue-3-%E7%9A%84-api-promise-%E5%8C%96), which is really mad.
 
-Instead of handling multiple platforms with many conditions and type conversions, this package is a simple wrapper of the callback style official API, which converts the callback style to the `Promise` style, and automatically infers the return type.
+In other words, FXXK U DCloud!
+
+Instead of handling multiple platforms with many conditions and type conversions, this package behaves as a simple wrapper for the official callback APIs, converting those callback functions to be the `resolve` and `reject` in `Promise`, and also automatically infers the types of return values.
 
 ## Install
 
@@ -27,40 +29,52 @@ Instead of handling multiple platforms with many conditions and type conversions
 npm install uniapp-promisify
 # Or use yarn
 yarn add uniapp-promisify
+# Or use pnpm
+pnpm i uniapp-promisify
 ```
 
 ## Usage
 
+`uniapp-promisify` exports a function called `promisify` which can be used in the following ways:
+
+- Promisify a single function.
+
 ```ts
 import { promisify } from 'uniapp-promisify'
 
-// Promisify a single function
 const login = promisify(uni.login)
 const res = await login()
 //     ^? UniNamespace.LoginRes
+```
 
-// Or you could promisify the whole `uni` global object
+- Promisify the whole `uni` global object.
+
+```ts
+import { promisify } from 'uniapp-promisify'
+
 const pUni = promisify(uni)
 const res = await pUni.login()
 //     ^? UniNamespace.LoginRes
 ```
 
-The ideal way to use this package is create a file exports the promisified `uni` object:
+- Use the `uni` object directly from `uniapp-promisify`, which is already promisified.
 
 ```ts
-// utils.ts
-import { promisify } from 'uniapp-promisify'
+import { uni } from 'uniapp-promisify'
 
-export {
-  uni: promisify(uni)
-}
+const res = await uni.login()
+//     ^? UniNamespace.LoginRes
+```
 
-// App.vue
-import { uni } from './utils.ts'
+## Synchronous API
 
-onLoad(async () => {
-  await uni.login()
-})
+Since there are some cases where asynchronous calls are not allowed, when using the promisified `uni` global object, you can use the `uni.sync` property to map to the original `uni` object that has not been wrapped.
+
+```ts
+import { uni } from 'uniapp-promisify'
+
+// uni.getUserProfile() can only be called in synchronous functions
+const res = uni.sync.getUserProfile()
 ```
 
 ## License
