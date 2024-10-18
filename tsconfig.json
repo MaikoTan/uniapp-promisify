@@ -7,6 +7,10 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationDir": "dist",
+    "types": [
+      "@dcloudio/types",
+      "@uni-helper/uni-app-types"
+    ]
   },
   "include": [
     "src/**/*"

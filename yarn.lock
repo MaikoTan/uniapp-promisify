@@ -5,6 +5,13 @@ __metadata:
   version: 8
   cacheKey: 10
 
+"@dcloudio/types@npm:^3.4.12":
+  version: 3.4.12
+  resolution: "@dcloudio/types@npm:3.4.12"
+  checksum: 10/7c7d72ad77c351d58ec5e791155e773c6b7ab6c5deb84066175f1118cda2e30319efe7b536e89d2c7dedbc30949641ddf61e457a8364c109bb1dc87b4086ea2f
+  languageName: node
+  linkType: hard
+
 "@esbuild/android-arm64@npm:0.17.19":
   version: 0.17.19
   resolution: "@esbuild/android-arm64@npm:0.17.19"
@@ -268,6 +275,16 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10/115e8ceeec6bc69dff2048b35c0ab4f8bbee12d8bb6c1f4af758604586d802b6e669dcb02dda61d078de42c2b4ddce41b3d9e726d7daa6b4b850f4adbf7333ff
+  languageName: node
+  linkType: hard
+
+"@uni-helper/uni-app-types@npm:^1.0.0-alpha.5":
+  version: 1.0.0-alpha.5
+  resolution: "@uni-helper/uni-app-types@npm:1.0.0-alpha.5"
+  peerDependencies:
+    typescript: ^5.0.0
+    vue: ^3.0.0
+  checksum: 10/b4ed8e9e675787f48615be458a77a435a6249c846be3614c8606828787b68770fc0965ac3e7341fd2ecf2a167c708247423e45b59f1624c6c92d0de3de321343
   languageName: node
   linkType: hard
 
@@ -1667,6 +1684,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "uniapp-promisify@workspace:."
   dependencies:
+    "@dcloudio/types": "npm:^3.4.12"
+    "@uni-helper/uni-app-types": "npm:^1.0.0-alpha.5"
     tsup: "npm:^6.6.3"
     typescript: "npm:~5.0.1"
   languageName: unknown

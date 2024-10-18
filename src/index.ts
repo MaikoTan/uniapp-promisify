@@ -41,8 +41,6 @@ export function promisify(fn: any) {
   }
 }
 
-declare const uni: Record<string, any>
-
 const pUni = promisify(uni)
 
 export {

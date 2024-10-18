@@ -42,5 +42,9 @@
   "devDependencies": {
     "tsup": "^6.6.3",
     "typescript": "~5.0.1"
+  },
+  "dependencies": {
+    "@dcloudio/types": "^3.4.12",
+    "@uni-helper/uni-app-types": "^1.0.0-alpha.5"
   }
 }
