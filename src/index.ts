@@ -19,13 +19,13 @@ export function promisify<Module extends Record<string, any>>(module: Module): P
 export function promisify(fn: any) {
   if (typeof fn === 'object') {
     return new Proxy(fn, {
-      get(target, prop) {
+      get(target, prop, receiver) {
         if (prop === 'sync') {
           return target
-        } else if (typeof target[prop] !== 'function') {
-          return target[prop]
+        } else if (typeof Reflect.get(target, prop, receiver) !== 'function') {
+          return Reflect.get(target, prop, receiver)
         }
-        return promisify(target[prop])
+        return promisify(Reflect.get(target, prop, receiver))
       },
     })
   } else if (typeof fn === 'function') {
