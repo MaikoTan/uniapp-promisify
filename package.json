@@ -40,6 +40,10 @@
   },
   "packageManager": "yarn@4.5.0",
   "devDependencies": {
+    "@types/fs-extra": "^11",
+    "fs-extra": "^11.3.2",
+    "prettier": "^3.6.2",
+    "ts-morph": "^27.0.2",
     "tsup": "^6.6.3",
     "typescript": "~5.0.1"
   },
