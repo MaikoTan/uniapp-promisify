@@ -5,6 +5,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "moduleResolution": "node",
+    // Since UniApp's declaration files have some issues, we skip type checking for them
+    "skipLibCheck": true,
     "lib": [
       "esnext",
       "dom"

@@ -45,17 +45,7 @@ const res = await login()
 //     ^? UniNamespace.LoginRes
 ```
 
-- Promise 化整个 `uni` 全局对象
-
-```ts
-import { promisify } from 'uniapp-promisify'
-
-const pUni = promisify(uni)
-const res = await pUni.login()
-//     ^? UniNamespace.LoginRes
-```
-
-- 直接使用 `uniapp-promisify` 中已经 Promise 化的 `uni` 对象
+- 直接使用 `uniapp-promisify` 中导出的 `uni` 对象，该对象中的方法已经被 Promise 化
 
 ```ts
 import { uni } from 'uniapp-promisify'
@@ -63,13 +53,14 @@ import { uni } from 'uniapp-promisify'
 
 ## 同步 API
 
-由于在一些情况下无法使用异步方式调用，因此当使用被 Promise 化的 `uni` 全局对象时，可以通过 `uni.sync` 属性映射到原本的没有被包装过的 `uni` 对象。
+由于一些方法总是同步调用，因此当使用导出的 `uni` 对象时，这些方法并没有被 Promise 化，而是相当于直接调用原方法：
 
 ```ts
 import { uni } from 'uniapp-promisify'
 
-// uni.getUserProfile() 只能在同步函数中调用
-const res = uni.sync.getUserProfile()
+// uni.createAnimation 不是异步的
+const animation = uni.createAnimation()
+//     ^? UniNamespace.Animation
 ```
 
 ## 许可证
