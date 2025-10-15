@@ -49,7 +49,7 @@
     "typescript": "~5.0.1"
   },
   "dependencies": {
-    "@dcloudio/types": "^3.4.12",
-    "@uni-helper/uni-app-types": "^1.0.0-alpha.5"
+    "@dcloudio/types": "^3.4.24",
+    "@uni-helper/uni-app-types": "^1.0.0-alpha.6"
   }
 }

@@ -5,10 +5,10 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@dcloudio/types@npm:^3.4.12":
-  version: 3.4.12
-  resolution: "@dcloudio/types@npm:3.4.12"
-  checksum: 10/7c7d72ad77c351d58ec5e791155e773c6b7ab6c5deb84066175f1118cda2e30319efe7b536e89d2c7dedbc30949641ddf61e457a8364c109bb1dc87b4086ea2f
+"@dcloudio/types@npm:^3.4.24":
+  version: 3.4.24
+  resolution: "@dcloudio/types@npm:3.4.24"
+  checksum: 10/51228b3d00c54d2dcbdb24db07b9ec21a670b562a38783d6d27f92fd8fc800ac93174be010da24f32ff696a68381c815dc9cb4cfb4e278aa36f8623d4c0bc48e
   languageName: node
   linkType: hard
 
@@ -333,13 +333,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uni-helper/uni-app-types@npm:^1.0.0-alpha.5":
-  version: 1.0.0-alpha.5
-  resolution: "@uni-helper/uni-app-types@npm:1.0.0-alpha.5"
+"@uni-helper/uni-app-types@npm:^1.0.0-alpha.6":
+  version: 1.0.0-alpha.6
+  resolution: "@uni-helper/uni-app-types@npm:1.0.0-alpha.6"
   peerDependencies:
     typescript: ^5.0.0
     vue: ^3.0.0
-  checksum: 10/b4ed8e9e675787f48615be458a77a435a6249c846be3614c8606828787b68770fc0965ac3e7341fd2ecf2a167c708247423e45b59f1624c6c92d0de3de321343
+  checksum: 10/a6121573fbea6f0e526ca11612376f0a703f32da397ce36c0765ce024f8d77c1db9bca0cb18697b54f525f7874ceddc313d248fdb3ddfafbe683579f9be10f04
   languageName: node
   linkType: hard
 
@@ -1841,9 +1841,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "uniapp-promisify@workspace:."
   dependencies:
-    "@dcloudio/types": "npm:^3.4.12"
+    "@dcloudio/types": "npm:^3.4.24"
     "@types/fs-extra": "npm:^11"
-    "@uni-helper/uni-app-types": "npm:^1.0.0-alpha.5"
+    "@uni-helper/uni-app-types": "npm:^1.0.0-alpha.6"
     fs-extra: "npm:^11.3.2"
     prettier: "npm:^3.6.2"
     ts-morph: "npm:^27.0.2"
