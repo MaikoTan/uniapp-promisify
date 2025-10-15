@@ -4,8 +4,9 @@
   "license": "AGPL-3.0",
   "description": "Uni App API Promisify",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch"
+    "generate": "yarn dlx tsx src/extract-methods.ts",
+    "build": "yarn generate && tsup",
+    "dev": "yarn generate && tsup --watch"
   },
   "files": [
     "dist",
