@@ -58,7 +58,7 @@ const res = await uni.login()
 
 ## Synchronous API
 
-Since there are some cases where asynchronous calls are not allowed, when using the `uni` with these methods, they would not be actually promisified, instead, the original synchronous methods would be called directly.
+Since there are some functions that is always called synchronously, when using the `uni` with these methods, they would not be actually promisified, instead, the original synchronous methods would be called directly.
 
 ```ts
 import { uni } from 'uniapp-promisify'
