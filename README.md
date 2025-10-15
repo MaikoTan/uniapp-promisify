@@ -47,17 +47,7 @@ const res = await login()
 //     ^? UniNamespace.LoginRes
 ```
 
-- Promisify the whole `uni` global object.
-
-```ts
-import { promisify } from 'uniapp-promisify'
-
-const pUni = promisify(uni)
-const res = await pUni.login()
-//     ^? UniNamespace.LoginRes
-```
-
-- Use the `uni` object directly from `uniapp-promisify`, which is already promisified.
+- Use the object `uni` directly from `uniapp-promisify`, the methods in this object are already promisified.
 
 ```ts
 import { uni } from 'uniapp-promisify'
@@ -68,13 +58,14 @@ const res = await uni.login()
 
 ## Synchronous API
 
-Since there are some cases where asynchronous calls are not allowed, when using the promisified `uni` global object, you can use the `uni.sync` property to map to the original `uni` object that has not been wrapped.
+Since there are some cases where asynchronous calls are not allowed, when using the `uni` with these methods, they would not be actually promisified, instead, the original synchronous methods would be called directly.
 
 ```ts
 import { uni } from 'uniapp-promisify'
 
-// uni.getUserProfile() can only be called in synchronous functions
-const res = uni.sync.getUserProfile()
+// uni.createAnimation() can only be called in synchronous functions
+const res = uni.createAnimation()
+//     ^? UniNamespace.Animation
 ```
 
 ## License
