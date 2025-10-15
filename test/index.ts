@@ -1,4 +1,4 @@
-import { promisify } from 'uniapp-promisify'
+import { promisify, uni as pUni } from 'uniapp-promisify'
 import { expectType } from 'ts-expect'
 
 ;(async () => {
@@ -14,7 +14,6 @@ import { expectType } from 'ts-expect'
   await chooseImage({ foo: 'bar' })
 
   // promisify the whole uni object
-  const pUni = promisify(uni)
   expectType<UniApp.GetSystemInfoResult>(await pUni.getSystemInfo())
   expectType<UniApp.ChooseImageSuccessCallbackResult>(await pUni.chooseImage())
   await pUni.chooseImage({ count: 1 })
