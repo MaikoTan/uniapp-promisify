@@ -17,27 +17,27 @@ import { outputFile } from 'fs-extra'
 import { format } from 'prettier'
 import { Project, SyntaxKind } from 'ts-morph'
 
+/**
+ * A record of method names to override with custom implementations.
+ * This can be used to handle special cases where the default promisification
+ * logic does not apply correctly.
+ */
+const methodOverrides: Record<string, string> = {
+  addInterceptor: `export const addInterceptor = (name: string, options: UniApp.InterceptorOptions) => {
+    return new Promise<any>((resolve, reject) => uni.addInterceptor(name, {
+      ...options,
+      success: (res) => resolve(res),
+      fail: (err) => reject(err),
+    }))
+  }`,
+}
+
 const project = new Project({
   tsConfigFilePath: 'tsconfig.json',
 })
 
 const filtersSourceFile = project.getSourceFileOrThrow('src/filters.ts')
 const typeChecker = project.getTypeChecker()
-
-// Get the type that lists names of functions we should promisify.
-const promisifiableFunctionNamesType = typeChecker.getTypeAtLocation(
-  filtersSourceFile.getTypeAliasOrThrow('PromisifiableFunctionNames').getNameNode()
-)!
-
-// The type is a union of string literal types — extract each literal.
-const promisifiableUnionTypes = promisifiableFunctionNamesType.getUnionTypes()
-
-const promisifiableNames = promisifiableUnionTypes.map((t) => {
-  const text = typeChecker.getTypeText(t)
-  return text.replace(/^['"]/g, '').replace(/['"]$/g, '')
-})
-
-promisifiableNames.sort()
 
 const uniTypeAlias = filtersSourceFile.getTypeAliasOrThrow('Uni')
 const uniType = typeChecker.getTypeAtLocation(uniTypeAlias.getNameNode())!
@@ -51,18 +51,52 @@ const outputLines: string[] = [
 
 uniProperties.forEach((property) => {
   const propName = property.getName()
-  const matchedPromisifiableName = promisifiableNames.find((n) => propName === n)
 
-  const valueDecl = property.getValueDeclarationOrThrow()
-  const methodSignature = valueDecl.asKindOrThrow(SyntaxKind.MethodSignature)
+  const valueDecls = property.getDeclarations()
+  const methodSignatures = valueDecls.map((decl) => decl.asKindOrThrow(SyntaxKind.MethodSignature))
 
   // Preserve JSDoc for the property/method
-  methodSignature.getJsDocs().forEach((doc) => {
-    outputLines.push(doc.getText().trim())
+  methodSignatures.forEach((methodSignature) => {
+    methodSignature.getJsDocs().forEach((doc) => {
+      outputLines.push(doc.getText().trim())
+    })
   })
 
-  if (matchedPromisifiableName) {
-    outputLines.push(`export const ${propName} = promisify(uni.${propName})`)
+  const isCallbackLike = (() => {
+    let res = false
+    methodSignatures.forEach((sig) => {
+      const optType = sig.getParameters()?.[0]?.getType()
+      if (optType?.isObject()) {
+        const props = optType.getProperties().map((p) => p.getName())
+        if (props.includes('success') || props.includes('fail') || props.includes('complete')) {
+          res = true
+        }
+      }
+    })
+    return res
+  })()
+
+  if (methodOverrides[propName]) {
+    outputLines.push(methodOverrides[propName])
+    outputLines.push('')
+  } else if (isCallbackLike) {
+    // check if the method has multiple parameters
+    const hasMultiParameters = methodSignatures.some((methodSignature) => {
+      return methodSignature.getParameters()?.length > 1
+    })
+    if (hasMultiParameters) {
+      const mostParamsSignature = methodSignatures.reduce((prev, curr) => {
+        return prev.getParameters().length > curr.getParameters().length ? prev : curr
+      })
+      const firstParam = mostParamsSignature.getParameters()[0].getType().getText()
+      const restParams = mostParamsSignature
+        .getParameters()
+        .slice(1)
+        .map((param) => `${param.getName()}${param.isOptional() ? '?' : ''}: ${param.getType().getText()}`)
+      outputLines.push(`export const ${propName} = promisify<${firstParam}, [${restParams.join(', ')}]>(uni.${propName})`)
+    } else {
+      outputLines.push(`export const ${propName} = promisify(uni.${propName})`)
+    }
   } else {
     outputLines.push(`export const ${propName} = uni.${propName}`)
   }

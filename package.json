@@ -6,7 +6,9 @@
   "scripts": {
     "generate": "yarn dlx tsx src/extract-methods.ts",
     "build": "yarn generate && tsup",
-    "dev": "yarn generate && tsup --watch"
+    "dev": "yarn generate && tsup --watch",
+    "prepack": "yarn build",
+    "prepublishOnly": "yarn build"
   },
   "files": [
     "dist",

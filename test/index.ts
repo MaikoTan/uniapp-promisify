@@ -20,4 +20,23 @@ import { expectType } from 'ts-expect'
   await pUni.chooseImage({ crop: { height: 500, width: 500 } })
   // @ts-expect-error
   await pUni.chooseImage({ foo: 'bar' })
+
+  // promisify multi-argument function
+  expectType<UniApp.CanvasToTempFilePathRes>(
+    await pUni.canvasToTempFilePath({
+      canvasId: 'myCanvas',
+      width: 300,
+      height: 150,
+    }),
+  )
+  expectType<UniApp.CanvasToTempFilePathRes>(
+    await pUni.canvasToTempFilePath(
+      {
+        canvasId: 'myCanvas',
+        width: 300,
+        height: 150,
+      },
+      '',
+    ),
+  )
 })()
