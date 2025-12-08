@@ -6,6 +6,6 @@ export default defineConfig({
   dts: true,
   splitting: true,
   clean: true,
-  minify: true,
+  minify: false,
   target: 'es2015',
 })
