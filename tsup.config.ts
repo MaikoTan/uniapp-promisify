@@ -2,7 +2,8 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entryPoints: ['src/index.ts'],
-  format: ['esm', 'cjs'],
+  format: ['esm', 'cjs', 'iife'],
+  globalName: 'UniAppPromisify',
   dts: true,
   splitting: true,
   clean: true,
