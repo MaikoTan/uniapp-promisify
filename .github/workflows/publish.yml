@@ -38,3 +38,27 @@ jobs:
 
       - name: Publish
         uses: JS-DevTools/npm-publish@v4
+
+      # The action exits 0 when it decides there is nothing to publish, so a green
+      # checkmark does not prove the release happened. Without a Trusted Publisher
+      # configured on npmjs.com it even misreports unpublished versions as
+      # "already published" and skips. Verify against the registry instead of
+      # trusting the job status.
+      - name: Verify published version
+        run: |
+          expected=$(node -p "require('./package.json').version")
+          published="<none>"
+          # The registry can take a moment to reflect a fresh publish, and npm
+          # caches metadata, so retry briefly before declaring failure.
+          for attempt in 1 2 3 4 5 6; do
+            published=$(npm view "${{ github.event.repository.name }}" version --prefer-online 2>/dev/null || echo "<none>")
+            echo "attempt $attempt: published=$published"
+            [ "$published" = "$expected" ] && break
+            sleep 10
+          done
+          if [ "$published" != "$expected" ]; then
+            echo "::error::${{ github.event.repository.name }}@$expected was not published (registry has $published)."
+            echo "If npm Trusted Publishing is not configured, set it up on npmjs.com for this package."
+            exit 1
+          fi
+          echo "published ${{ github.event.repository.name }}@$expected"
