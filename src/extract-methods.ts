@@ -3,19 +3,25 @@
  *
  * What it does:
  * - Loads the TypeScript project via ts-morph (using tsconfig.json).
- * - Reads the `PromisifiableFunctionNames` type alias (a union of string literal names)
- *   to determine which Uni API functions should be wrapped with `promisify`.
  * - Reads the `Uni` type alias to iterate all API properties (methods).
  * - For each property, preserves its JSDoc and either:
- *   - exports `promisify(uni.prop)` when the property name is included in
- *     PromisifiableFunctionNames, or
- *   - exports `uni.prop` directly when it is not promisifiable.
+ *   - exports `promisify((...args) => uni.prop(...args))` when the method's first
+ *     parameter is callback-like (has `success`/`fail`/`complete`), or
+ *   - exports `(...args) => uni.prop(...args)` directly when it is not promisifiable.
+ * - Every wrapper resolves `uni.prop` at call time rather than at module load time, so
+ *   importing this module never throws when the `uni` global is not yet defined, and
+ *   APIs replaced after import (e.g. by mocks or platform polyfills) are picked up.
  * - Formats the generated file with Prettier and writes it to `src/p-uni.ts`.
  */
 
 import { outputFile } from 'fs-extra'
 import { format } from 'prettier'
-import { Project, SyntaxKind } from 'ts-morph'
+import { Project, SyntaxKind, Type } from 'ts-morph'
+
+/**
+ * The callback properties that mark a Uni API as promisifiable.
+ */
+const CALLBACK_PROPERTIES = new Set<string>(['success', 'fail', 'complete'])
 
 /**
  * A record of method names to override with custom implementations.
@@ -35,6 +41,23 @@ const methodOverrides: Record<string, string> = {
 const project = new Project({
   tsConfigFilePath: 'tsconfig.json',
 })
+
+/**
+ * Resolves the `Promise` result type of a callback-like option type, i.e. the parameter
+ * type of its `success` callback. Falls back to `void` when it cannot be determined.
+ */
+function getSuccessResultTypeText(optionType: Type): string {
+  const success = optionType.getProperty('success')
+  const decl = success?.getDeclarations()[0]
+  const successType = success?.getTypeAtLocation(decl) ?? success?.getType()
+  if (!successType) return 'void'
+
+  const signatures = successType.getCallSignatures()
+  const param = signatures[0]?.getParameters()[0]
+  if (!param) return 'void'
+  const paramDecl = param.getDeclarations()[0]
+  return paramDecl ? paramDecl.getType().getText() : 'void'
+}
 
 const filtersSourceFile = project.getSourceFileOrThrow('src/filters.ts')
 const typeChecker = project.getTypeChecker()
@@ -62,43 +85,60 @@ uniProperties.forEach((property) => {
     })
   })
 
-  const isCallbackLike = (() => {
-    let res = false
-    methodSignatures.forEach((sig) => {
-      const optType = sig.getParameters()?.[0]?.getType()
-      if (optType?.isObject()) {
-        const props = optType.getProperties().map((p) => p.getName())
-        if (props.includes('success') || props.includes('fail') || props.includes('complete')) {
-          res = true
-        }
-      }
-    })
-    return res
-  })()
+  const isCallbackLike = methodSignatures.some((sig) => {
+    const optType = sig.getParameters()[0]?.getType()
+    return (
+      !!optType?.isObject() &&
+      optType.getProperties().some((p) => CALLBACK_PROPERTIES.has(p.getName()))
+    )
+  })
 
   if (methodOverrides[propName]) {
     outputLines.push(methodOverrides[propName])
     outputLines.push('')
-  } else if (isCallbackLike) {
-    // check if the method has multiple parameters
-    const hasMultiParameters = methodSignatures.some((methodSignature) => {
-      return methodSignature.getParameters()?.length > 1
-    })
-    if (hasMultiParameters) {
-      const mostParamsSignature = methodSignatures.reduce((prev, curr) => {
-        return prev.getParameters().length > curr.getParameters().length ? prev : curr
-      })
-      const firstParam = mostParamsSignature.getParameters()[0].getType().getText()
-      const restParams = mostParamsSignature
-        .getParameters()
-        .slice(1)
-        .map((param) => `${param.getName()}${param.isOptional() ? '?' : ''}: ${param.getType().getText()}`)
-      outputLines.push(`export const ${propName} = promisify<${firstParam}, [${restParams.join(', ')}]>(uni.${propName})`)
+    return
+  }
+
+  // Use the widest overload so that optional/rest parameters are captured accurately.
+  const widestSignature = methodSignatures.reduce((prev, curr) =>
+    curr.getParameters().length > prev.getParameters().length ? curr : prev,
+  )
+  const params = widestSignature.getParameters()
+  // Resolve `uni.<prop>` at call time instead of at module load time. Reading it eagerly
+  // would throw a ReferenceError on import wherever the `uni` global is not yet defined
+  // (SSR, Node, unit tests) and would permanently bind APIs that are replaced later.
+  // The cast is needed because overloaded Uni APIs cannot be called with a spread argument.
+  const lazyCallee = `(...args: any[]) => (uni.${propName} as any)(...args)`
+
+  if (isCallbackLike) {
+    // `promisify` can no longer infer the option type from the (untyped) lazy callee,
+    // so it is passed explicitly.
+    const firstParamType = params[0].getType().getText()
+    const restParams = params
+      .slice(1)
+      .map((param) => `${param.getName()}${param.isOptional() ? '?' : ''}: ${param.getType().getText()}`)
+    // Generic Uni APIs (e.g. `getStorage<T>`) must keep their type parameters, otherwise
+    // the emitted `.d.ts` references an undeclared `T`. `promisify` cannot express those
+    // type parameters itself, so a small generic wrapper is generated instead.
+    const typeParams = widestSignature.getTypeParameters()
+    if (typeParams.length) {
+      const generics = typeParams.map((tp) => tp.getText())
+      const genericsDecl = `<${generics.join(', ')}>`
+      const restTuple = `[${restParams.join(', ')}]`
+      // Resolve the `success` result type so the promise is typed instead of `any`.
+      const successResult = getSuccessResultTypeText(params[0].getType())
+      const signature = `${genericsDecl}(options: ${firstParamType}${
+        restParams.length ? `, ...rest: ${restTuple}` : ''
+      }) => Promise<${successResult}>`
+      outputLines.push(`export const ${propName} = promisify(${lazyCallee}) as ${signature}`)
     } else {
-      outputLines.push(`export const ${propName} = promisify(uni.${propName})`)
+      outputLines.push(
+        `export const ${propName} = promisify<${firstParamType}, [${restParams.join(', ')}]>(${lazyCallee})`,
+      )
     }
   } else {
-    outputLines.push(`export const ${propName} = uni.${propName}`)
+    // Annotate with the original type so overloads and JSDoc-driven inference survive.
+    outputLines.push(`export const ${propName}: typeof uni.${propName} = ${lazyCallee}`)
   }
   outputLines.push('')
 })

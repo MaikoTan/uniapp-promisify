@@ -68,6 +68,15 @@ const res = uni.createAnimation()
 //     ^? UniNamespace.Animation
 ```
 
+## Notes
+
+- Each exported API is resolved from the `uni` global **when it is called**, not when the
+  module is imported. This means importing `uniapp-promisify` never throws in environments
+  where `uni` is not defined yet (SSR, Node.js, unit tests), and APIs that are replaced
+  later — for example by a mock or a platform polyfill — are picked up automatically.
+- `success` and `fail` are consumed by the promise. If you pass your own `complete` or
+  `fail` callback, it is still invoked alongside the promise.
+
 ## License
 
 This project is licensed under the AGPL-3.0 License - see the [LICENSE](./LICENSE) file for details.

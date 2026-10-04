@@ -32,3 +32,4 @@ jobs:
           touch yarn.lock
           yarn
           yarn test
+          yarn test:runtime

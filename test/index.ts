@@ -39,4 +39,12 @@ import { expectType } from 'ts-expect'
       '',
     ),
   )
+
+  // Generic Uni APIs keep their type parameter
+  expectType<UniApp.GetStorageSuccess<number>>(await pUni.getStorage<number>({ key: 'a' }))
+  expectType<UniApp.GetStorageSuccess<string>>(await pUni.getStorage<string>({ key: 'a' }))
+
+  // Synchronous APIs keep their original signature
+  expectType<void>(pUni.$off())
+  pUni.createAnimation()
 })()
