@@ -8,8 +8,6 @@
     "dts-banner": "node -e \"f='dist/index.d.ts',b='/// <reference types=\\'@dcloudio/types\\' />\\n\\n';fs=require('fs');fs.existsSync(f)&&!fs.readFileSync(f,'utf8').startsWith(b)&&fs.writeFileSync(f,b+fs.readFileSync(f,'utf8'))\"",
     "build": "yarn generate && tsup && yarn dts-banner",
     "dev": "yarn generate && tsup --watch",
-    "prepare": "yarn generate",
-    "postinstall": "yarn generate",
     "prepack": "yarn build",
     "prepublishOnly": "yarn build"
   },

@@ -21,7 +21,7 @@ jobs:
           node-version: 20
 
       - name: Upgrade NPM to Latest
-        run: npm install -g npm@latest
+        run: npm install -g npm@latest # >= 11.5.1 required for OIDC trusted publishing
 
       - name: Install dependencies
         run: yarn install
@@ -31,5 +31,3 @@ jobs:
 
       - name: Publish
         uses: JS-DevTools/npm-publish@v4
-        with:
-          token: ${{ secrets.NPM_ACCESS_TOKEN }}
