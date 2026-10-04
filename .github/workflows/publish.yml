@@ -18,10 +18,17 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          # npm 12 requires node ^22.22.2 || ^24.15.0 || >=26, so `npm@latest`
+          # cannot be installed on node 20. Staying on the 22.x line keeps this
+          # step working as npm keeps releasing new majors.
+          node-version: 22
 
       - name: Upgrade NPM to Latest
-        run: npm install -g npm@latest # >= 11.5.1 required for OIDC trusted publishing
+        # OIDC trusted publishing requires npm >= 11.5.1. Pinned to the 11.x
+        # line rather than `latest`: npm 12 raised its node engine floor to
+        # ^22.22.2 || ^24.15.0 || >=26, so an unbounded `latest` breaks the
+        # moment a new major ships.
+        run: npm install -g 'npm@^11.5.1'
 
       - name: Install dependencies
         run: yarn install
