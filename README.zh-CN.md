@@ -63,6 +63,11 @@ const animation = uni.createAnimation()
 //     ^? UniNamespace.Animation
 ```
 
+## 注意事项
+
+- 导出的每个 API 都是**调用时**才从全局 `uni` 上读取的，而不是在模块导入时读取。这样在 `uni` 尚未定义的环境（SSR、Node.js、单元测试）中导入本包不会报错，并且之后被替换的 API（例如通过 mock 或平台 polyfill）也能自动生效。
+- `success` 与 `fail` 会被 Promise 消费。如果你额外传入了自己的 `complete` 或 `fail` 回调，它们仍然会被正常调用。
+
 ## 许可证
 
 本项目使用 AGPL-3.0 许可证 - 有关详细信息，请参阅 [LICENSE](./LICENSE) 文件。

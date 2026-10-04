@@ -5,7 +5,8 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "tsc"
+    "test": "tsc",
+    "test:runtime": "node runtime.mjs"
   },
   "devDependencies": {
     "@dcloudio/types": "latest",

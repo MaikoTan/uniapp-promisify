@@ -4,7 +4,7 @@
   "license": "AGPL-3.0",
   "description": "Uni App API Promisify",
   "scripts": {
-    "generate": "yarn dlx tsx src/extract-methods.ts",
+    "generate": "tsx src/extract-methods.ts",
     "dts-banner": "node -e \"f='dist/index.d.ts',b='/// <reference types=\\'@dcloudio/types\\' />\\n\\n';fs=require('fs');fs.existsSync(f)&&!fs.readFileSync(f,'utf8').startsWith(b)&&fs.writeFileSync(f,b+fs.readFileSync(f,'utf8'))\"",
     "build": "yarn generate && tsup && yarn dts-banner",
     "dev": "yarn generate && tsup --watch",
@@ -57,6 +57,7 @@
     "prettier": "^3.6.2",
     "ts-morph": "^27.0.2",
     "tsup": "^6.6.3",
+    "tsx": "^4.20.6",
     "typescript": "~5.0.1"
   },
   "dependencies": {
